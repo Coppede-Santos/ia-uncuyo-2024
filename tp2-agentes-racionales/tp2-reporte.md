@@ -19,7 +19,9 @@ En las siguientes gráficas se presentan los promedios de desempeño de las 10 p
 
 Se observa claramente que la diferencia en desempeño aumenta con el tamaño de las matrices, siendo el agente reflexivo notablemente superior.
 A continuación, se muestra una comparación entre los desempeños de ambos agentes en entornos de 2x2 y 128x128, y cómo evolucionan al incrementar el porcentaje de suciedad.
-![Tasa de acierto de limpieza con tasa de suciedad de 0.1](images/evolucion128.png)
-![Tasa de acierto de limpieza con tasa de suciedad de 0.2](images/evolucion2.png)
+
+
+![Tasa de acierto de limpieza con tasa de suciedad de 0.1](images/evolucion2.png)
+![Tasa de acierto de limpieza con tasa de suciedad de 0.2](images/evolucion128.png)
 ## Conclusiones
 La primera conclusión que se nos viene a la mente podría ser que el agente reflexivo tiene un desempeño superior en todas las pruebas que se realizaron, a comparación del agente aleatorio, y sería una conclusión correcta. Pero si observamos de forma más detallada podríamos pensar que el agente reflexivo es significativamente mejor en entornos de gran tamaño, por lo que en entornos pequeños sería necesario evaluar costos y beneficios para tomar una decisión acertada entre los dos agentes, ya que a pesar de que el agente reflexivo puede tener un mejor desempeño, este puede llegar a ser similar al de un agente aleatorio y merecedor de un costo demasiado superior.
