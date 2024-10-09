@@ -96,9 +96,9 @@ def mostrar_tablero(asignacion, n):
 
 
 # Prueba del código y visualización
-n = 12  # Tamaño del tablero
+n = 9  # Tamaño del tablero
 resultado = busqueda_vuelta_atras(n)
-
+print(resultado)
 
 if resultado:
     mostrar_tablero(resultado, n)
