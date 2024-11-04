@@ -14,3 +14,22 @@ La idea básica es preprocesar las restricciones de modo que, para cada valor de
 #### a) Para un CSP cuyo grafo de restricciones es un árbol, la 2-consistencia (consistencia de arco) implica n−consistencia, siendo n el número total de variables.
 #### b) Argumentar por qué lo demostrado en 5a es suficiente.
 
+## 7. Ejecutar 30 veces cada uno de los algoritmos implementados en el ejercicio 6, para el caso de 4, 8 y 10 reinas (opcional: 12 y 15 reinas).
+
+# Informe sobre el Desempeño de Algoritmos
+
+Para la demostración de los ejercicios, se optó por realizar gráficos de caja y bigote que muestran los tiempos de ejecución de ambos algoritmos en función de diferentes tamaños, permitiendo así una comparación clara de su desempeño. Además, se analizará la evolución de cada algoritmo a través de los distintos tamaños, considerando la cantidad de estados evaluados.
+
+## Gráficos de Caja y Bigote
+
+Para facilitar la comprensión, se presentarán dos gráficos que representan la eficiencia de los algoritmos para resolver los problemas de las 10 y 12 reinas.
+
+![Gráfico de Tiempos para 10 Reinas](images/grafico_tiempos_n_10.png)
+
+![Gráfico de Tiempos para 12 Reinas](images/grafico_tiempos_n_12.png)
+
+A su vez, se realizará un análisis más profundo mediante la evaluación de un gráfico que muestra la cantidad de evaluaciones por algoritmo y tamaño.
+
+![Gráfico de Evaluaciones](images/grafico_evaluaciones.png)
+
+Como se puede observar en los distintos gráficos, el algoritmo AC3 muestra un rendimiento similar al del algoritmo de backtracking; en algunos casos es inferior, mientras que en otros es incluso superior. Sin embargo, es evidente que para tamaños mayores, el algoritmo AC3 es ampliamente superado, llegando a triplicar el número de estados evaluados.
