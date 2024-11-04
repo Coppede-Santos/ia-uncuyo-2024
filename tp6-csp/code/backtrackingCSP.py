@@ -1,60 +1,111 @@
 def crear_matriz(n):
-    # Crear una matriz vacía de tamaño n x n
-    matriz = [[0] * n for _ in range(n)]
+    """Crear una matriz de tamaño n, donde cada posición contiene una lista con los valores de 0 a n-1."""
+    return [list(range(n)) for _ in range(n)]
 
-    # Llenar la matriz con valores de 0 a n-1 en cada columna
-    for columna in range(n):
-        for fila in range(n):
-            matriz[fila][columna] = fila  # Asignar valores incrementales en cada columna
+
+def remover_valor_excepto_fila(matriz, valor_a_remover, fila_excluida):
+    """Eliminar el valor en todas las filas excepto en la fila excluida."""
+    for index, fila in enumerate(matriz):
+        if index == fila_excluida or isinstance(fila, int):
+            continue
+        if valor_a_remover in fila:
+            fila.remove(valor_a_remover)
     return matriz
 
-def estan_en_diagonal(vector,n):
-    # Recorrer cada par de elementos del vector para verificar las diagonales
+
+def estan_en_diagonal(vector, n):
+    """Verificar si hay elementos en diagonal conflictiva."""
     for fila1 in range(n):
-        if vector[fila1] is None:
-            continue  # Ignorar si el valor de la columna es None
+        if vector[fila1] is None or isinstance(vector[fila1], list):
+            continue
         for fila2 in range(fila1 + 1, n):
-            if vector[fila2] is None:
-                continue  # Ignorar si el valor de la columna es None
-            # Si están en la misma diagonal
+            if vector[fila2] is None or isinstance(vector[fila2], list):
+                continue
             if abs(fila1 - fila2) == abs(vector[fila1] - vector[fila2]):
-                return True  # Hay al menos una diagonal conflictiva
-    return False  # No hay elementos en diagonal
+                return True
+    return False
 
-def posiciones_sin_multiples_valores(vector):
-    # Verificar que cada posición tenga un único valor o esté vacía (None)
-    for valor in vector:
-        # Si el valor es una colección (lista, conjunto o tupla) y tiene más de un elemento
-        if isinstance(valor, (list, set, tuple)) and len(valor) > 1:
-            return valor
-    return None
 
-def vuelta_atras_recursiva(asignacion,n):
-    index = posiciones_sin_multiples_valores(asignacion)
-    if index is None: return asignacion
+def posicion_con_menos_valores(vector):
+    """Encontrar el índice de la fila con la menor cantidad de opciones."""
+    min_valores = float('inf')  # Inicializamos con infinito
+    indice_menor = None
 
-    #todos_los_valores = set(range(n))
-    #valores_en_vector = set(asignacion)
-    #valores_faltantes = todos_los_valores - valores_en_vector
-    valores=asignacion[index]
-    for valor in valores:
+    for index, valor in enumerate(vector):
+        if isinstance(valor, list) and len(valor) > 1:
+            if len(valor) < min_valores:  # Buscar la lista con menos elementos
+                min_valores = len(valor)
+                indice_menor = index
+
+    return indice_menor
+
+
+def vuelta_atras_recursiva(asignacion, n, contador_evaluaciones=0):
+    """Implementar la búsqueda con vuelta atrás para resolver el problema."""
+    # Obtener el índice con menos opciones de asignación
+    index = posicion_con_menos_valores(asignacion)
+
+    # Si no hay ninguna posición con más de un valor, se ha encontrado una solución
+    if index is None:
+        return asignacion, contador_evaluaciones
+
+    # Obtener las opciones en esa posición (lista de valores posibles)
+    opciones = asignacion[index]
+
+    # Crear una copia de la asignación para restaurar en caso de errores
+    copia_asignacion = [list(fila) if isinstance(fila, list) else fila for fila in asignacion]
+
+    for valor in opciones:
+        # Incrementar el contador por cada evaluación de valor
+        contador_evaluaciones += 1
+
+        # Asignar el valor actual y removerlo de las demás filas
         asignacion[index] = valor
-        #print(valores_faltantes,f"analizando el index {index}, asignacion {asignacion}, hay valores en la diagonal {estan_en_diagonal(asignacion,n)}")
+        remover_valor_excepto_fila(asignacion, valor, index)
 
-        if not estan_en_diagonal(asignacion,n):
-            #print(f"entra {asignacion}")
-            comprobar=vuelta_atras_recursiva(asignacion,n)
-            #print(f"sale {comprobar}")
+        # Si no hay valores en diagonal, continuar con la recursión
+        if not estan_en_diagonal(asignacion, n):
+            resultado, contador_evaluaciones = vuelta_atras_recursiva(asignacion, n, contador_evaluaciones)
+            if resultado is not None:
+                return resultado, contador_evaluaciones  # Solución encontrada
 
-            if comprobar is not None:
-                return asignacion
-        asignacion[index] = None
-    return None
+        # Revertir la asignación en esta posición
+        asignacion = [list(fila) if isinstance(fila, list) else fila for fila in copia_asignacion]
 
+    return None, contador_evaluaciones  # No se encontró solución
+    return None  # No se encontró solución
+
+
+
+
+def mostrar_tablero(asignacion, n):
+    """Función para mostrar el resultado como un tablero."""
+    print("\nSolución encontrada:")
+    for fila in range(n):
+        # Si la asignación de la fila es un entero, lo mostramos
+        if isinstance(asignacion[fila], int):
+            tablero = ['.'] * n
+            tablero[asignacion[fila]] = 'Q'  # Colocar la reina en la columna correspondiente
+            print(" ".join(tablero))
+        elif isinstance(asignacion[fila], list) and len(asignacion[fila]) == 1:
+            tablero = ['.'] * n
+            tablero[asignacion[fila][0]] = 'Q'
+            print(" ".join(tablero))
+        else:
+            print("[Error] La fila no tiene un valor asignado correctamente.")  # Esto no debería ocurrir si la solución es válida
 
 def busqueda_vuelta_atras(n):
+    """Función principal para buscar la solución con vuelta atrás."""
+    asignacion_inicial = crear_matriz(n)
+    return vuelta_atras_recursiva(asignacion_inicial, n)
 
-    return vuelta_atras_recursiva(crear_matriz(n),n)
-#vec=[0,4,5]
-#print(estan_en_diagonal(vec,3))
-print(busqueda_vuelta_atras(12))
+
+# Prueba del código y visualización
+n = 4  # Tamaño del tablero
+resultado, contador_evaluaciones = busqueda_vuelta_atras(n)
+print(f"Evaluaciones realizadas: {contador_evaluaciones}")  # Mostrar el conteo de evaluaciones
+
+if resultado:
+    mostrar_tablero(resultado, n)
+else:
+    print("No se encontró una solución.")
