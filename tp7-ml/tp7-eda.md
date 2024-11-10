@@ -42,8 +42,7 @@ El siguiente cuadro presenta el porcentaje de inclinaciones peligrosas por espec
 | Ailanthus           | 96.30%                        | 3.70%                      |
 | Algarrobo           | 60.00%                        | 40.00%                     |
 | Arabia              | 100.00%                       | 0.00%                      |
-| Braquiquito         | 100.00%                       | 0.00%                      |
-| ...                 | ...                           | ...                        |
+| Braquiquito         | 100.00%                       | 0.00%                      |                       
 | Morera              | 81.45%                        | 18.55%                     |
 | Tipa                | 89.33%                        | 10.67%                     |
 | álamo blanco        | 94.85%                        | 5.15%                      |

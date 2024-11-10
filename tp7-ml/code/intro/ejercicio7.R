@@ -1,6 +1,3 @@
-### A. Las funciones create_folds() y cross_validation()
-
-```R
 # Cargar los paquetes necesarios
 library(rpart)
 library(dplyr)
@@ -74,11 +71,7 @@ cross_validation <- function(data, num_folds) {
   return(metrics)
 }
 
-```
-## Tabla con los resultados
-| Metric      | Mean     | Std_Dev   |
-|-------------|----------|-----------|
-| Accuracy    | 0.8884013 | 0.01646887 |
-| Precision   | 0.0000000 | 0.00000000 |
-| Sensitivity | NaN      | NA        |
-| Specificity | 0.8884013 | 0.01646887 |
+# Cargar el dataset y ejecutar cross-validation
+validation_data <- read.csv("C:/Users/Martinotebook/Documents/nacho (podes borrar tranqui)/2° año/Paradigmas/lab/ia-uncuyo-2024/tp7-ml/code/intro/arbolado-mendoza-dataset-validation.csv")
+metrics_result <- cross_validation(validation_data, 10)
+print(metrics_result)
