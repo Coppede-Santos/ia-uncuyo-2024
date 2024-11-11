@@ -1,40 +1,67 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
+import numpy as np
 
-# Leer los datos desde el archivo CSV
-df = pd.read_csv('tennis.csv')
+# Método para calcular el valor mayoritario
+def Valor_mayoria(ejemplos, class_name):
+    return ejemplos[class_name].mode()[0]  # Devuelve el valor más frecuente en la clase
 
-# Mostrar las primeras filas del archivo CSV para asegurarse de que los datos se leyeron correctamente
-print(df.head())
+# Método para calcular la entropía de un conjunto de datos
+def calcular_entropia(ejemplos, class_name):
+    frecuencia = ejemplos[class_name].value_counts(normalize=True)
+    entropia = -sum(frecuencia * np.log2(frecuencia))
+    return entropia
 
-# Convertir las columnas categóricas a variables numéricas
-df['outlook'] = df['outlook'].map({'sunny': 0, 'overcast': 1, 'rainy': 2})
-df['temp'] = df['temp'].map({'hot': 0, 'mild': 1, 'cool': 2})
-df['humidity'] = df['humidity'].map({'high': 0, 'normal': 1})
-df['windy'] = df['windy'].map({'false': 0, 'true': 1})
-df['play'] = df['play'].map({'no': 0, 'yes': 1})
+# Método para elegir el mejor atributo usando la ganancia de información
+def Elegir_atributo(atribs, ejemplos, class_name):
+    entropia_inicial = calcular_entropia(ejemplos, class_name)
+    mejor_ganancia = -1
+    mejor_atributo = None
 
-# Establecer los predictores (X) y la variable de respuesta (y)
-X = df[['outlook', 'temp', 'humidity', 'windy']]  # Predictores
-y = df['play']  # Variable a predecir
+    for atributo in atribs:
+        # Calcula la entropía condicional para cada valor del atributo
+        entropia_atributo = 0
+        for valor in ejemplos[atributo].unique():
+            subset = ejemplos[ejemplos[atributo] == valor]
+            probabilidad = len(subset) / len(ejemplos)
+            entropia_atributo += probabilidad * calcular_entropia(subset, class_name)
 
-# Crear el modelo de árbol de decisión
-model = DecisionTreeClassifier()
+        # Calcula la ganancia de información
+        ganancia = entropia_inicial - entropia_atributo
 
-# Entrenar el modelo
-model.fit(X, y)
+        if ganancia > mejor_ganancia:
+            mejor_ganancia = ganancia
+            mejor_atributo = atributo
 
-# Visualizar el árbol de decisión
-tree.plot_tree(model, feature_names=X.columns, class_names=['no', 'yes'], filled=True)
+    return mejor_atributo
 
-# Realizar predicciones con el modelo
-predicciones = model.predict(X)
 
-# Mostrar las predicciones
-print("Predicciones:", predicciones)
+def Aprendizaje_arbol_decision(ejemplos, atribs, default, class_name):
+    if len(ejemplos) == 0:
+        return default
+    elif len(ejemplos[class_name].unique()) == 1:
+        return ejemplos[class_name].iloc[0]
+    elif len(atribs) == 0:
+        return Valor_mayoria(ejemplos, class_name)
+    else:
+        mejor = Elegir_atributo(atribs, ejemplos, class_name)
+        arbol = {mejor: {}}
+        m = Valor_mayoria(ejemplos, class_name)
+        for value in ejemplos[mejor].unique():
+            subset = ejemplos[ejemplos[mejor] == value]
+            subArbol = Aprendizaje_arbol_decision(subset, atribs.drop([mejor]), m, class_name)
+            arbol[mejor][value] = subArbol
+        return arbol
 
-# Mostrar el árbol de decisión en formato texto
-print("\nÁrbol de decisión:")
-tree_rules = tree.export_text(model, feature_names=X.columns.tolist())
-print(tree_rules)
+# Cargar los datos desde el archivo CSV
+# Asegúrate de reemplazar esta ruta con la ruta correcta donde esté guardado "tennis.csv"
+ejemplos = pd.read_csv("C:/Users/Martinotebook/Documents/nacho (podes borrar tranqui)/2° año/Paradigmas/lab/ia-uncuyo-2024/tp7-ml/data/tennis.csv")
+
+
+# Lista de atributos (excluyendo la clase objetivo)
+atribs = ejemplos.columns.drop("play")
+
+# Llamar a la función de aprendizaje del árbol de decisión
+arbol = Aprendizaje_arbol_decision(ejemplos, atribs, Valor_mayoria(ejemplos, "play"), "play")
+
+# Mostrar el árbol de decisión generado
+print(arbol)
