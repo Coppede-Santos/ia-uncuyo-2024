@@ -14,7 +14,7 @@ random_classifier <- function(df) {
 }
 
 # Cargar el archivo 'arbolado-mendoza-dataset-validation.csv'
-df <- read.csv('data/arbolado-mendoza-dataset-validation.csv')
+df <- read.csv("C:/Users/Martinotebook/Documents/nacho (podes borrar tranqui)/2° año/Paradigmas/lab/ia-uncuyo-2024/tp7-ml/code/intro/arbolado-mendoza-dataset-validation.csv")
 
 # Aplicar las funciones
 df <- df %>%
